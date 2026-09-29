@@ -1,19 +1,19 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     try {
         const { username, email, password, role, cardNo } = req.body;
         
-        // 检查 Email 或 借书证号 是否已存在
         const existingUser = await User.findOne({ $or: [{ email }, { cardNo }] });
         if (existingUser) {
-            return res.status(400).json({ message: "The email address or library card number has already been registered." });
+            return res.status(400).json({ message: "邮箱或借书证号已被注册" });
         }
 
         const newUser = new User({
             username,
             email,
-            password, // 实际项目中建议加上 bcrypt 加密
+            password,
             role: role || "member",
             cardNo
         });
@@ -31,12 +31,18 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email, password });
 
         if (!user) {
-            return res.status(401).json({ message: "Incorrect email or password." });
+            return res.status(401).json({ message: "邮箱或密码错误" });
         }
 
-        // 返回用户信息（包含角色，供前端判定 admin / member）
+        const token = jwt.sign(
+            { id: user._id, role: user.role, email: user.email },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: `${process.env.JWT_EXPIRES_IN}h` }
+        );
+
         res.json({
-            message: "Login successful.",
+            message: "登录成功",
+            token,
             user: {
                 id: user._id,
                 username: user.username,

@@ -67,27 +67,3 @@ exports.getUniqueCategories = async (req, res) => {
         res.status(500).json(error);
     }
 };
-
-exports.loadDefaultBooks = async () => {
-    const defaultBooks = [
-        {
-            title: "JavaScript: The Good Parts",
-            isbn: "9780596517748",
-            author: "Douglas Crockford",
-            category: "Programming",
-            totalStock: 5,
-            availableStock: 5,
-            shelfLocation: "A-01-01"
-        },
-        {
-            title: "Clean Code",
-            isbn: "9780132350884",
-            author: "Robert C. Martin",
-            category: "Software Engineering",
-            totalStock: 3,
-            availableStock: 2,
-            shelfLocation: "A-01-02"
-        }
-    ];
-    await Book.insertMany(defaultBooks);
-};

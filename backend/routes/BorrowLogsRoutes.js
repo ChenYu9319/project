@@ -1,14 +1,15 @@
 const express = require("express");
 const BorrowLogsController = require("../controllers/BorrowLogsController");
+const { verifyToken, isAdmin } = require("../middleware/auth");
 
 const route = express.Router();
 
-route.post("/", BorrowLogsController.createNewBorrow);
+route.post("/", verifyToken, BorrowLogsController.createNewBorrow);
 
-route.get("/", BorrowLogsController.getAllBorrowLogs);
+route.get("/", verifyToken, BorrowLogsController.getAllBorrowLogs);
 
-route.put("/:id/return", BorrowLogsController.returnBook);
+route.put("/:id/return", verifyToken, BorrowLogsController.returnBook);
 
-route.delete("/:id", BorrowLogsController.deleteBorrowLogById);
+route.delete("/:id", verifyToken, isAdmin, BorrowLogsController.deleteBorrowLogById);
 
 module.exports = route;

@@ -6,10 +6,9 @@ exports.createReservation = async (req, res) => {
     try {
         const book = await Book.findById(bookId);
         if (!book) {
-            return res.status(404).json({ message: "The book does not exist." });
+            return res.status(404).json({ message: "图书不存在" });
         }
 
-        // 检查是否已经预约过这本书
         const existingReservation = await Reservation.findOne({
             userId,
             bookId,
@@ -17,7 +16,7 @@ exports.createReservation = async (req, res) => {
         });
 
         if (existingReservation) {
-            return res.status(400).json({ message: "You have already reserved this book; please do not place a duplicate reservation." });
+            return res.status(400).json({ message: "您已预约过此图书，请勿重复预约" });
         }
 
         const newReservation = new Reservation({
