@@ -9,10 +9,10 @@ exports.createNewBorrow = async (req, res) => {
         const user = await User.findById(userId);
 
         if (!book || book.availableStock <= 0) {
-            return res.status(400).json({ message: "图书不存在或库存不足" });
+            return res.status(400).json({ message: "The book does not exist or is out of stock." });
         }
         if (!user || user.currentBorrowsCount >= 5) {
-            return res.status(400).json({ message: "读者已达到最大借阅限制(5本)" });
+            return res.status(400).json({ message: "The patron has reached the maximum borrowing limit (5 items)." });
         }
 
         const dueDate = new Date();
@@ -57,7 +57,7 @@ exports.returnBook = async (req, res) => {
     try {
         const log = await BorrowLog.findById(req.params.id);
         if (!log || log.status === "Returned") {
-            return res.status(400).json({ message: "未找到记录或该图书已归还" });
+            return res.status(400).json({ message: "No record found, or the book has already been returned." });
         }
 
         log.returnDate = new Date();

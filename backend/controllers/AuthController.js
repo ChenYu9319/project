@@ -7,7 +7,7 @@ exports.register = async (req, res) => {
         
         const existingUser = await User.findOne({ $or: [{ email }, { cardNo }] });
         if (existingUser) {
-            return res.status(400).json({ message: "邮箱或借书证号已被注册" });
+            return res.status(400).json({ message: "The email address or library card number has already been registered." });
         }
 
         const newUser = new User({
@@ -31,7 +31,7 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email, password });
 
         if (!user) {
-            return res.status(401).json({ message: "邮箱或密码错误" });
+            return res.status(401).json({ message: "Incorrect email or password." });
         }
 
         const token = jwt.sign(
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
         );
 
         res.json({
-            message: "登录成功",
+            message: "Login successful.",
             token,
             user: {
                 id: user._id,
